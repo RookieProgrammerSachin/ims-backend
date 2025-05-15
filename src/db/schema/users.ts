@@ -8,9 +8,9 @@ export const adminUsers = pgTable("admin_users", {
   firstname: varchar({ length: 100 }).notNull(),
   lastname: varchar({ length: 100 }),
   email: varchar({ length: 255 }).notNull().unique(),
-  mobile: varchar({ length: 20 }).notNull().unique(),
-  hash: varchar({ length: 255 }).notNull(),
-  salt: varchar({ length: 255 }).notNull(),
+  mobile: varchar({ length: 10 }).notNull().unique(),
+  hash: varchar().notNull(),
+  salt: varchar().notNull(),
   ...timestamps,
 });
 

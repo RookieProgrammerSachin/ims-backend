@@ -1,5 +1,6 @@
 import { drizzle } from "drizzle-orm/neon-http";
 import * as schema from "./schema";
+import "dotenv/config";
 
 const DATABASE_URI =
   process.env.DB_MODE === "local"
