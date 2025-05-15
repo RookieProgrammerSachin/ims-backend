@@ -5,10 +5,10 @@ const logger = {
     console.log(chalk.blue(`[INFO] ${message}`));
   },
   warn: (...message: any) => {
-    console.log(chalk.yellow(`[WARN] ${message}`));
+    console.warn(chalk.yellow(`[WARN] ${message}`));
   },
   error: (...message: any) => {
-    console.log(chalk.red(`[ERROR] ${message}`));
+    console.error(chalk.red(`[ERROR] ${message}`));
   },
 };
 

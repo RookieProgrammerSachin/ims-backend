@@ -5,12 +5,12 @@ import { inventoryItem } from "./inventory_item";
 
 export const adminUsers = pgTable("admin_users", {
   id: serial().primaryKey(),
-  firstname: varchar({ length: 100 }),
+  firstname: varchar({ length: 100 }).notNull(),
   lastname: varchar({ length: 100 }),
-  email: varchar({ length: 255 }),
-  mobile: varchar({ length: 20 }),
-  hash: varchar({ length: 255 }),
-  salt: varchar({ length: 255 }),
+  email: varchar({ length: 255 }).notNull().unique(),
+  mobile: varchar({ length: 20 }).notNull().unique(),
+  hash: varchar({ length: 255 }).notNull(),
+  salt: varchar({ length: 255 }).notNull(),
   ...timestamps,
 });
 

@@ -8,6 +8,13 @@
       "when": 1747278483476,
       "tag": "0000_reflective_catseye",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1747299395029,
+      "tag": "0001_useful_scrambler",
+      "breakpoints": true
     }
   ]
 }
