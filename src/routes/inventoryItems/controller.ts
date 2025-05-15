@@ -10,7 +10,7 @@ export const fetchAllInventoryItems: RequestHandler = async (
 ) => {
   try {
     const items = await db.query.inventoryItem.findMany();
-    res.json(items);
+    res.json({ data: items });
   } catch (error) {
     logger.error("@method fetchAllInventoryItems:", error);
     res.status(500).json({
@@ -34,11 +34,9 @@ export const createInventoryItem: RequestHandler = async (
       });
       return;
     }
-    const newItem = await db
-      .insert(inventoryItem)
-      .values(validation.data!)
-      .returning();
-    res.status(201).json(newItem[0]);
+    await db.insert(inventoryItem).values(validation.data!);
+
+    res.status(201).json({ message: "Item created successfully!" });
   } catch (error) {
     logger.error("@method createInventoryItem:", error);
     res.status(500).json({
