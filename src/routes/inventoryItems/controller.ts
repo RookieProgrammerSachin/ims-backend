@@ -19,6 +19,21 @@ export const fetchAllInventoryItems: RequestHandler = async (
   }
 };
 
+export const fetchAllInventoryCategories: RequestHandler = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const items = await db.query.inventoryItemCategory.findMany();
+    res.json({ data: items });
+  } catch (error) {
+    logger.error("@method fetchAllInventoryItems:", error);
+    res.status(500).json({
+      error: "Server error in fetching inventory items",
+    });
+  }
+};
+
 export const createInventoryItem: RequestHandler = async (
   req: Request,
   res: Response,

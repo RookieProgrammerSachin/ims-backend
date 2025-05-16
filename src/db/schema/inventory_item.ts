@@ -11,6 +11,7 @@ import {
 import { timestamps } from "./helper";
 import { adminUsers } from "./users";
 import { relations } from "drizzle-orm";
+import { itemLocations } from "./location";
 
 export const inventoryItemUsageTypeEnum = pgEnum(
   "inventory_item_usage_type_enum",
@@ -49,6 +50,19 @@ export const itemCategoryMapping = pgTable(
   (t) => [unique("item_category_unq").on(t.itemId, t.categoryId)],
 );
 
+/** Table to track quantity changes across time. However, since locations are also involved, maybe client asks the feature where
+ * quantities are tracked across locations and across time.
+ * So maybe later modify to include locations too?
+ */
+export const itemQuantity = pgTable("item_qty", {
+  id: serial().primaryKey(),
+  itemId: integer()
+    .references(() => inventoryItem.id)
+    .notNull(),
+  quantity: integer().notNull(),
+  createdAt: timestamps.createdAt,
+});
+
 export const inventoryItemRelations = relations(
   inventoryItem,
   ({ one, many }) => ({
@@ -57,6 +71,7 @@ export const inventoryItemRelations = relations(
       references: [adminUsers.id],
     }),
     category: many(itemCategoryMapping),
+    locations: many(itemLocations),
   }),
 );
 
@@ -80,3 +95,10 @@ export const itemCategoryMappingRelations = relations(
     }),
   }),
 );
+
+export const itemQuantityRelations = relations(itemQuantity, ({ one }) => ({
+  item: one(inventoryItem, {
+    fields: [itemQuantity.itemId],
+    references: [inventoryItem.id],
+  }),
+}));

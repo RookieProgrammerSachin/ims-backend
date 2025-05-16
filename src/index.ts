@@ -5,6 +5,7 @@ import "dotenv/config";
 import { DEV_FRONTEND_URI, PROD_FRONTEND_URI } from "./lib/constants";
 import logger from "./lib/logger";
 import adminUserRouter from "./routes/adminUser/routes";
+import inventoryItemsRouter from "./routes/inventoryItems/routes";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -19,6 +20,6 @@ app.use(
 );
 
 app.use("/admins", adminUserRouter);
-app.use("/inventory", adminUserRouter);
+app.use("/inventory", inventoryItemsRouter);
 
 app.listen(PORT, () => logger.info("IMS Server running"));

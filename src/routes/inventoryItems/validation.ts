@@ -3,7 +3,7 @@ import { inventoryItemUsageTypeEnum } from "../../db/schema/inventory_item";
 import { createValidationError } from "../../lib/validation";
 
 export const inventoryItemSchema = z.object({
-  name: z.string().min(1, "Name is required"),
+  name: z.string().min(2, "Name is required and atleast 2 characters"),
   description: z.string().nullish(),
   disabled: z.boolean().default(false),
   createdBy: z.number().positive("Valid creator ID is required"),
