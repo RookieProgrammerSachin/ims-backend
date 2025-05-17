@@ -60,6 +60,8 @@ export const itemQuantity = pgTable("item_qty", {
     .references(() => inventoryItem.id)
     .notNull(),
   quantity: integer().notNull(),
+  finalQuantity: integer().notNull(),
+  reason: varchar(),
   createdAt: timestamps.createdAt,
 });
 
@@ -70,7 +72,7 @@ export const inventoryItemRelations = relations(
       fields: [inventoryItem.createdBy],
       references: [adminUsers.id],
     }),
-    category: many(itemCategoryMapping),
+    categories: many(itemCategoryMapping),
     locations: many(itemLocations),
   }),
 );

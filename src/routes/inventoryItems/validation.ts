@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { inventoryItemUsageTypeEnum } from "../../db/schema/inventory_item";
-import { createValidationError } from "../../lib/validation";
 
 export const inventoryItemSchema = z.object({
   name: z.string().min(2, "Name is required and atleast 2 characters"),
@@ -14,7 +13,7 @@ export const inventoryItemSchema = z.object({
   quantity: z
     .number({ required_error: "Item quantity is required" })
     .positive("Quantity cannot be negative"),
-  location: z.number().positive("Valid location is required").nullish(),
+  location: z.number().positive("Valid location is required"),
 });
 
 export type InventoryItemInput = z.infer<typeof inventoryItemSchema>;

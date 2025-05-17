@@ -4,13 +4,40 @@ import { inventoryItem } from "../../db/schema/inventory_item";
 import logger from "../../lib/logger";
 import { createValidationError } from "../../lib/validation";
 import { inventoryItemSchema } from "./validation";
+import { itemLocations, locations } from "../../db/schema";
 
 export const fetchAllInventoryItems: RequestHandler = async (
   req: Request,
   res: Response,
 ) => {
   try {
-    const items = await db.query.inventoryItem.findMany();
+    const items = await db.query.inventoryItem.findMany({
+      with: {
+        categories: {
+          columns: {
+            categoryId: true,
+          },
+          with: {
+            category: {
+              columns: {
+                name: true,
+                id: true,
+              },
+            },
+          },
+        },
+        locations: {
+          with: {
+            location: {
+              columns: {
+                name: true,
+                id: true,
+              },
+            },
+          },
+        },
+      },
+    });
     res.json({ data: items });
   } catch (error) {
     logger.error("@method fetchAllInventoryItems:", error);
@@ -65,15 +92,24 @@ export const createInventoryItem: RequestHandler = async (
       return;
     }
 
-    await db.insert(inventoryItem).values({
-      createdBy: validation.data.createdBy,
-      name: validation.data.name,
-      price: String(validation.data.price),
-      description: validation.data.description,
-      disabled: validation.data.disabled,
-      imageUrl: validation.data.imageUrl,
-      sku: validation.data.sku,
-      usageType: validation.data.usageType,
+    await db.transaction(async (tx) => {
+      const [item] = await tx
+        .insert(inventoryItem)
+        .values({
+          createdBy: validation.data.createdBy,
+          name: validation.data.name,
+          price: String(validation.data.price),
+          description: validation.data.description,
+          disabled: validation.data.disabled,
+          imageUrl: validation.data.imageUrl,
+          sku: validation.data.sku,
+          usageType: validation.data.usageType,
+        })
+        .returning();
+
+      await tx
+        .insert(itemLocations)
+        .values({ itemId: item.id, locationId: validation.data.location });
     });
 
     res.status(201).json({ message: "Item created successfully!" });
