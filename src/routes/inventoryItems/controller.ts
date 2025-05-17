@@ -1,10 +1,10 @@
 import { Request, RequestHandler, Response } from "express";
 import { db } from "../../db";
-import { inventoryItem } from "../../db/schema/inventory_item";
+import { itemLocations } from "../../db/schema";
+import { inventoryItem, itemQuantity } from "../../db/schema/inventory_item";
 import logger from "../../lib/logger";
 import { createValidationError } from "../../lib/validation";
 import { inventoryItemSchema } from "./validation";
-import { itemLocations, locations } from "../../db/schema";
 
 export const fetchAllInventoryItems: RequestHandler = async (
   req: Request,
@@ -34,6 +34,15 @@ export const fetchAllInventoryItems: RequestHandler = async (
                 id: true,
               },
             },
+          },
+        },
+        quantity: {
+          columns: {
+            finalQuantity: true,
+          },
+          limit: 1,
+          orderBy(fields, operators) {
+            return operators.desc(fields.createdAt);
           },
         },
       },
@@ -110,6 +119,14 @@ export const createInventoryItem: RequestHandler = async (
       await tx
         .insert(itemLocations)
         .values({ itemId: item.id, locationId: validation.data.location });
+
+      await tx.insert(itemQuantity).values({
+        itemId: item.id,
+        finalQuantity: validation.data.quantity,
+        quantity: validation.data.quantity,
+        operation: "add",
+        reason: "Admin add new item",
+      });
     });
 
     res.status(201).json({ message: "Item created successfully!" });

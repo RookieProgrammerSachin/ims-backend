@@ -18,6 +18,11 @@ export const inventoryItemUsageTypeEnum = pgEnum(
   ["lendable", "rentable"],
 );
 
+export const quantityChangeEnum = pgEnum("quantity_change_enum", [
+  "subtract",
+  "add",
+]);
+
 export const inventoryItem = pgTable("inventory_item", {
   id: serial().primaryKey(),
   name: text().notNull(),
@@ -62,6 +67,7 @@ export const itemQuantity = pgTable("item_qty", {
   quantity: integer().notNull(),
   finalQuantity: integer().notNull(),
   reason: varchar(),
+  operation: quantityChangeEnum().notNull(),
   createdAt: timestamps.createdAt,
 });
 
@@ -74,6 +80,7 @@ export const inventoryItemRelations = relations(
     }),
     categories: many(itemCategoryMapping),
     locations: many(itemLocations),
+    quantity: many(itemQuantity),
   }),
 );
 

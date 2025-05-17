@@ -1,4 +1,4 @@
-import { drizzle } from "drizzle-orm/neon-http";
+import { drizzle } from "drizzle-orm/postgres-js";
 import * as schema from "./schema";
 import "dotenv/config";
 
