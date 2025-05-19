@@ -67,7 +67,7 @@ export const loginAdmin: RequestHandler = async (
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       expires: cookieExpiryTime,
-      sameSite: "lax",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     });
     res.json({
       data: userAuth,
