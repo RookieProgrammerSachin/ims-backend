@@ -9,8 +9,7 @@ export async function verifyJWT(
   token: string,
   userType: UserTypes,
 ): Promise<AuthUser> {
-  const secret = encoder.encode(cookieNameMap[userType].cookieName);
-
+  const secret = encoder.encode(cookieNameMap[userType].secret);
   try {
     return (await jwtVerify<AuthUser>(token, secret)).payload;
   } catch (error) {
