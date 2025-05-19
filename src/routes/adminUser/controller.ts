@@ -85,7 +85,9 @@ export const logoutAdmin: RequestHandler = async (
   res: Response,
 ) => {
   try {
-    res.clearCookie(env.ADMIN_COOKIE_NAME!);
+    res.clearCookie(env.ADMIN_COOKIE_NAME!, {
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    });
     res.json({ message: "Logged out successfully" });
   } catch (error) {
     logger.error("@method logoutAdmin:", error);
