@@ -87,6 +87,8 @@ export const logoutAdmin: RequestHandler = async (
   try {
     res.clearCookie(env.ADMIN_COOKIE_NAME!, {
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
     });
     res.json({ message: "Logged out successfully" });
   } catch (error) {
