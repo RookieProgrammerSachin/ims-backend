@@ -1,6 +1,7 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import * as schema from "./schema";
 import "dotenv/config";
+import postgres from "postgres";
 
 const DATABASE_URI =
   process.env.DB_MODE === "local"
@@ -14,7 +15,9 @@ if (!DATABASE_URI)
 
 export { DATABASE_URI };
 
-export const db = drizzle(DATABASE_URI, {
+const pgConnection = postgres(DATABASE_URI);
+
+export const db = drizzle(pgConnection, {
   casing: "snake_case",
   schema,
   logger: true,

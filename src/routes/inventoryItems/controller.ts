@@ -1,7 +1,12 @@
 import { Request, RequestHandler, Response } from "express";
 import { db } from "../../db";
 import { itemLocations } from "../../db/schema";
-import { inventoryItem, itemQuantity } from "../../db/schema/inventory_item";
+import {
+  inventoryItem,
+  inventoryItemCategory,
+  itemCategoryMapping,
+  itemQuantity,
+} from "../../db/schema/inventory_item";
 import logger from "../../lib/logger";
 import { createValidationError } from "../../lib/validation";
 import { inventoryItemSchema } from "./validation";
@@ -126,6 +131,11 @@ export const createInventoryItem: RequestHandler = async (
         quantity: validation.data.quantity,
         operation: "add",
         reason: "Admin add new item",
+      });
+
+      await tx.insert(itemCategoryMapping).values({
+        categoryId: validation.data.category,
+        itemId: item.id,
       });
     });
 

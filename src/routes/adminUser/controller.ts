@@ -60,11 +60,13 @@ export const loginAdmin: RequestHandler = async (
       salt: undefined,
     };
     const token = await signJWT(userAuth, env.ADMIN_COOKIE_SEC!);
-    const _30minsFromNow = new Date(new Date().getTime() + 30 * 60000);
+    const cookieExpiryTime = new Date(
+      new Date().getTime() + 6 * 60 * 60 * 1000,
+    );
     res.cookie(env.ADMIN_COOKIE_NAME!, token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      expires: _30minsFromNow,
+      expires: cookieExpiryTime,
       sameSite: "lax",
     });
     res.json({
@@ -74,6 +76,21 @@ export const loginAdmin: RequestHandler = async (
     logger.error("@method loginAdmin:", error);
     res.status(500).json({
       error: "Server error in logging in",
+    });
+  }
+};
+
+export const logoutAdmin: RequestHandler = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    res.clearCookie(env.ADMIN_COOKIE_NAME!);
+    res.json({ message: "Logged out successfully" });
+  } catch (error) {
+    logger.error("@method logoutAdmin:", error);
+    res.status(500).json({
+      error: "Server error in logging out",
     });
   }
 };

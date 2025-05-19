@@ -10,6 +10,11 @@ export const inventoryItemSchema = z.object({
   sku: z.string().nullish(),
   usageType: z.enum(inventoryItemUsageTypeEnum.enumValues).default("rentable"),
   imageUrl: z.string().url().nullish(),
+  category: z
+    .number({
+      required_error: "Category is required",
+    })
+    .positive(),
   quantity: z
     .number({ required_error: "Item quantity is required" })
     .positive("Quantity cannot be negative"),
